@@ -31,6 +31,12 @@
             --history-border: #eeeeee;
             --history-entry-bg: #f8f8fc;
             --history-result: #667eea;
+            --game-accent: #22c55e;
+            --game-accent-dim: #16a34a;
+            --game-wrong: #ef4444;
+            --game-bar-bg: #f0fdf4;
+            --game-muted: #64748b;
+            --tier-bg: #e2e8f0;
         }
 
         [data-theme="dark"] {
@@ -59,6 +65,12 @@
             --history-border: #3d3d4d;
             --history-entry-bg: #363648;
             --history-result: #8b9cf0;
+            --game-accent: #4ade80;
+            --game-accent-dim: #22c55e;
+            --game-wrong: #f87171;
+            --game-bar-bg: #1a2e1a;
+            --game-muted: #94a3b8;
+            --tier-bg: #3d3d4d;
         }
 
         * {
@@ -97,7 +109,7 @@
                 flex-direction: row;
                 align-items: flex-start;
                 justify-content: center;
-                max-width: 860px;
+                max-width: 1200px;
                 gap: 32px;
             }
 
@@ -105,10 +117,11 @@
                 flex: 0 0 400px;
             }
 
-            .app-layout .history-panel {
+            .app-layout .history-panel,
+            .app-layout .game-panel {
                 flex: 1;
-                min-width: 280px;
-                max-width: 400px;
+                min-width: 260px;
+                max-width: 360px;
             }
         }
 
@@ -344,6 +357,237 @@
             text-align: center;
             padding: 24px 12px;
         }
+
+        .calc-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            gap: 8px;
+        }
+
+        .calc-header h1 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--btn-color);
+        }
+
+        .game-mode-btn {
+            border: 2px solid var(--operator-bg);
+            background: transparent;
+            color: var(--operator-bg);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            white-space: nowrap;
+        }
+
+        .game-mode-btn:hover {
+            background: var(--operator-bg);
+            color: #fff;
+        }
+
+        .game-mode-btn.active {
+            background: var(--game-accent);
+            border-color: var(--game-accent);
+            color: #fff;
+        }
+
+        .game-mode-btn.active:hover {
+            background: var(--game-accent-dim);
+            border-color: var(--game-accent-dim);
+        }
+
+        .game-problem {
+            display: none;
+            background: var(--game-bar-bg);
+            color: var(--btn-color);
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 2px solid var(--game-accent);
+        }
+
+        body.game-active .game-problem {
+            display: block;
+        }
+
+        body.game-active .display.game-answer {
+            border: 2px solid var(--game-accent);
+        }
+
+        .display.feedback-correct {
+            box-shadow: inset 0 0 0 2px var(--game-accent);
+        }
+
+        .display.feedback-wrong {
+            box-shadow: inset 0 0 0 2px var(--game-wrong);
+        }
+
+        .game-panel {
+            background: var(--history-bg);
+            border-radius: 20px;
+            box-shadow: var(--history-shadow);
+            padding: 24px;
+            width: 100%;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .game-panel h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--history-title);
+        }
+
+        .game-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .game-stat {
+            background: var(--history-entry-bg);
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        .game-stat-label {
+            font-size: 0.75rem;
+            color: var(--history-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .game-stat-value {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: var(--history-title);
+            margin-top: 4px;
+        }
+
+        .game-stat-value.accent {
+            color: var(--game-accent);
+        }
+
+        .game-tier {
+            background: var(--history-entry-bg);
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .game-tier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+
+        .game-tier-name {
+            font-weight: 700;
+            color: var(--history-result);
+            font-size: 1rem;
+        }
+
+        .game-tier-rating {
+            font-size: 0.875rem;
+            color: var(--history-muted);
+        }
+
+        .game-tier-bar {
+            height: 8px;
+            background: var(--tier-bg);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .game-tier-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--operator-bg), var(--game-accent));
+            border-radius: 4px;
+            transition: width 0.4s ease;
+        }
+
+        .game-feedback {
+            min-height: 1.25rem;
+            font-size: 0.875rem;
+            color: var(--history-muted);
+            text-align: center;
+        }
+
+        .game-feedback.success {
+            color: var(--game-accent);
+            font-weight: 600;
+        }
+
+        .game-feedback.error {
+            color: var(--game-wrong);
+            font-weight: 600;
+        }
+
+        .game-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .game-actions button {
+            flex: 1;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .game-skip {
+            background: var(--btn-bg);
+            color: var(--btn-color);
+        }
+
+        .game-skip:hover {
+            background: var(--btn-hover);
+        }
+
+        .game-reset-score {
+            background: transparent;
+            border: 1px solid var(--history-border);
+            color: var(--history-muted);
+        }
+
+        .game-reset-score:hover {
+            color: var(--history-title);
+            border-color: var(--history-muted);
+        }
+
+        .game-rules {
+            font-size: 0.8125rem;
+            color: var(--history-muted);
+            line-height: 1.5;
+        }
+
+        .game-rules strong {
+            color: var(--history-title);
+        }
+
+        body:not(.game-active) .game-panel {
+            opacity: 0.65;
+        }
+
+        body.game-active .game-panel {
+            opacity: 1;
+            outline: 2px solid var(--game-accent);
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
@@ -357,7 +601,12 @@
     </button>
     <div class="app-layout">
         <div class="calculator">
-            <div class="display" id="display">0</div>
+            <div class="calc-header">
+                <h1>Калькулятор</h1>
+                <button type="button" class="game-mode-btn" id="gameModeBtn" aria-pressed="false">Игра: выкл</button>
+            </div>
+            <div class="game-problem" id="gameProblem" aria-live="polite">7 + 5 = ?</div>
+            <div class="display game-answer" id="display">0</div>
             <div class="buttons">
                 <button class="clear" onclick="clearDisplay()">C</button>
                 <button class="operator" onclick="appendOperator('/')">/</button>
@@ -390,6 +639,46 @@
                 <button type="button" class="history-clear" id="historyClear" title="Очистить журнал">Очистить</button>
             </div>
             <ul class="history-list" id="historyList"></ul>
+        </aside>
+
+        <aside class="game-panel" aria-label="Счёт на скорость">
+            <h2>Счёт на скорость</h2>
+            <div class="game-tier">
+                <div class="game-tier-header">
+                    <span class="game-tier-name" id="gameTierName">Новичок</span>
+                    <span class="game-tier-rating">Рейтинг: <span id="gameRating">1000</span></span>
+                </div>
+                <div class="game-tier-bar" aria-hidden="true">
+                    <div class="game-tier-fill" id="gameTierFill" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="game-stats-grid">
+                <div class="game-stat">
+                    <div class="game-stat-label">Очки</div>
+                    <div class="game-stat-value accent" id="gameScore">0</div>
+                </div>
+                <div class="game-stat">
+                    <div class="game-stat-label">Серия</div>
+                    <div class="game-stat-value" id="gameStreak">0</div>
+                </div>
+                <div class="game-stat">
+                    <div class="game-stat-label">Верно</div>
+                    <div class="game-stat-value" id="gameCorrect">0</div>
+                </div>
+                <div class="game-stat">
+                    <div class="game-stat-label">Уровень</div>
+                    <div class="game-stat-value" id="gameLevel">1</div>
+                </div>
+            </div>
+            <p class="game-feedback" id="gameFeedback" aria-live="polite">Включите игру и решайте примеры на клавиатуре калькулятора.</p>
+            <div class="game-actions">
+                <button type="button" class="game-skip" id="gameSkip">Пропустить</button>
+                <button type="button" class="game-reset-score" id="gameResetStats" title="Сбросить рейтинг и статистику">Сброс</button>
+            </div>
+            <p class="game-rules">
+                <strong>Как играть:</strong> включите режим «Игра», введите ответ цифрами и нажмите <strong>=</strong>.
+                За верный ответ — очки и рост рейтинга; за серию — бонус. Сложность растёт с уровнем.
+            </p>
         </aside>
     </div>
 
@@ -488,6 +777,278 @@
         document.getElementById('historyClear').addEventListener('click', clearHistory);
         loadHistory();
 
+        const GAME_STATS_KEY = 'calculator-game-stats';
+        const RATING_TIERS = [
+            { min: 0, name: 'Новичок' },
+            { min: 900, name: 'Ученик' },
+            { min: 1100, name: 'Знаток' },
+            { min: 1300, name: 'Мастер' },
+            { min: 1500, name: 'Эксперт' },
+            { min: 1700, name: 'Гений' }
+        ];
+
+        let gameMode = false;
+        let currentProblem = null;
+        let gameStats = {
+            score: 0,
+            rating: 1000,
+            streak: 0,
+            bestStreak: 0,
+            correct: 0,
+            wrong: 0,
+            level: 1
+        };
+
+        const gameModeBtn = document.getElementById('gameModeBtn');
+        const gameProblemEl = document.getElementById('gameProblem');
+        const gameFeedbackEl = document.getElementById('gameFeedback');
+
+        function loadGameStats() {
+            try {
+                const stored = localStorage.getItem(GAME_STATS_KEY);
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    gameStats = Object.assign({}, gameStats, parsed);
+                }
+            } catch {
+                /* keep defaults */
+            }
+            renderGameStats();
+        }
+
+        function saveGameStats() {
+            localStorage.setItem(GAME_STATS_KEY, JSON.stringify(gameStats));
+        }
+
+        function getTierForRating(rating) {
+            let tier = RATING_TIERS[0];
+            for (let i = 0; i < RATING_TIERS.length; i++) {
+                if (rating >= RATING_TIERS[i].min) {
+                    tier = RATING_TIERS[i];
+                }
+            }
+            return tier;
+        }
+
+        function getNextTierMin(rating) {
+            for (let i = 0; i < RATING_TIERS.length; i++) {
+                if (RATING_TIERS[i].min > rating) {
+                    return RATING_TIERS[i].min;
+                }
+            }
+            return RATING_TIERS[RATING_TIERS.length - 1].min + 200;
+        }
+
+        function getTierProgress(rating) {
+            const tier = getTierForRating(rating);
+            const nextMin = getNextTierMin(rating);
+            const span = nextMin - tier.min;
+            if (span <= 0) {
+                return 100;
+            }
+            return Math.min(100, Math.round(((rating - tier.min) / span) * 100));
+        }
+
+        function renderGameStats() {
+            document.getElementById('gameScore').textContent = String(gameStats.score);
+            document.getElementById('gameStreak').textContent = String(gameStats.streak);
+            document.getElementById('gameCorrect').textContent = String(gameStats.correct);
+            document.getElementById('gameLevel').textContent = String(gameStats.level);
+            document.getElementById('gameRating').textContent = String(gameStats.rating);
+            document.getElementById('gameTierName').textContent = getTierForRating(gameStats.rating).name;
+            document.getElementById('gameTierFill').style.width = getTierProgress(gameStats.rating) + '%';
+        }
+
+        function setGameFeedback(text, type) {
+            gameFeedbackEl.textContent = text;
+            gameFeedbackEl.className = 'game-feedback' + (type ? ' ' + type : '');
+        }
+
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function pickOperator(level) {
+            const ops = ['+', '-'];
+            if (level >= 2) {
+                ops.push('*');
+            }
+            if (level >= 3) {
+                ops.push('/');
+            }
+            return ops[randomInt(0, ops.length - 1)];
+        }
+
+        function generateProblem() {
+            const level = gameStats.level;
+            let a, b, op, answer;
+
+            op = pickOperator(level);
+            const cap = 10 + level * 8;
+
+            if (op === '+') {
+                a = randomInt(1, cap);
+                b = randomInt(1, cap);
+                answer = a + b;
+            } else if (op === '-') {
+                a = randomInt(1, cap);
+                b = randomInt(1, a);
+                answer = a - b;
+            } else if (op === '*') {
+                const m = Math.min(cap, 12);
+                a = randomInt(2, m);
+                b = randomInt(2, Math.min(12, 6 + level));
+                answer = a * b;
+            } else {
+                b = randomInt(2, Math.min(12, 4 + level));
+                const quotient = randomInt(2, Math.min(12, 4 + level));
+                a = b * quotient;
+                answer = quotient;
+            }
+
+            const opDisplay = op === '*' ? '×' : op;
+            currentProblem = {
+                a: a,
+                b: b,
+                op: op,
+                answer: answer,
+                text: a + ' ' + opDisplay + ' ' + b + ' = ?'
+            };
+            gameProblemEl.textContent = currentProblem.text;
+        }
+
+        function clearAnswerInput() {
+            currentInput = '0';
+            shouldResetDisplay = false;
+            updateDisplay();
+        }
+
+        function flashDisplay(ok) {
+            display.classList.remove('feedback-correct', 'feedback-wrong');
+            display.classList.add(ok ? 'feedback-correct' : 'feedback-wrong');
+            setTimeout(function() {
+                display.classList.remove('feedback-correct', 'feedback-wrong');
+            }, 450);
+        }
+
+        function pointsForAnswer() {
+            const base = 10 + gameStats.level * 2;
+            const streakBonus = Math.min(gameStats.streak, 10) * 3;
+            return base + streakBonus;
+        }
+
+        function submitGameAnswer() {
+            if (!gameMode || !currentProblem) {
+                return;
+            }
+
+            const raw = currentInput.replace(/×/g, '*').trim();
+            if (raw === '0' || raw === '' || raw === 'Ошибка') {
+                setGameFeedback('Введите ответ и нажмите =', 'error');
+                return;
+            }
+
+            const userAnswer = Number(raw);
+            if (!Number.isFinite(userAnswer) || !Number.isInteger(userAnswer)) {
+                setGameFeedback('Введите целое число', 'error');
+                flashDisplay(false);
+                return;
+            }
+
+            if (userAnswer === currentProblem.answer) {
+                const pts = pointsForAnswer();
+                gameStats.score += pts;
+                gameStats.correct += 1;
+                gameStats.streak += 1;
+                if (gameStats.streak > gameStats.bestStreak) {
+                    gameStats.bestStreak = gameStats.streak;
+                }
+                gameStats.rating += 8 + Math.min(gameStats.streak, 15);
+                if (gameStats.correct % 5 === 0 && gameStats.level < 8) {
+                    gameStats.level += 1;
+                }
+                setGameFeedback('Верно! +' + pts + ' очков', 'success');
+                flashDisplay(true);
+                saveGameStats();
+                renderGameStats();
+                generateProblem();
+                shouldResetDisplay = true;
+                clearAnswerInput();
+            } else {
+                gameStats.wrong += 1;
+                gameStats.streak = 0;
+                gameStats.rating = Math.max(0, gameStats.rating - 12);
+                setGameFeedback(
+                    'Неверно. Правильно: ' + currentProblem.answer,
+                    'error'
+                );
+                flashDisplay(false);
+                saveGameStats();
+                renderGameStats();
+                shouldResetDisplay = true;
+                clearAnswerInput();
+            }
+        }
+
+        function skipProblem() {
+            if (!gameMode) {
+                return;
+            }
+            gameStats.streak = 0;
+            gameStats.rating = Math.max(0, gameStats.rating - 5);
+            setGameFeedback('Пропущено. Ответ: ' + (currentProblem ? currentProblem.answer : '—'), 'error');
+            saveGameStats();
+            renderGameStats();
+            generateProblem();
+            clearAnswerInput();
+        }
+
+        function setGameMode(on) {
+            gameMode = on;
+            document.body.classList.toggle('game-active', on);
+            gameModeBtn.classList.toggle('active', on);
+            gameModeBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+            gameModeBtn.textContent = on ? 'Игра: вкл' : 'Игра: выкл';
+
+            if (on) {
+                generateProblem();
+                clearAnswerInput();
+                setGameFeedback('Введите ответ и нажмите =', '');
+            } else {
+                setGameFeedback('Включите игру и решайте примеры на клавиатуре калькулятора.', '');
+                clearDisplay();
+            }
+        }
+
+        function resetGameStats() {
+            if (!confirm('Сбросить очки, рейтинг и статистику игры?')) {
+                return;
+            }
+            gameStats = {
+                score: 0,
+                rating: 1000,
+                streak: 0,
+                bestStreak: 0,
+                correct: 0,
+                wrong: 0,
+                level: 1
+            };
+            saveGameStats();
+            renderGameStats();
+            if (gameMode) {
+                generateProblem();
+                clearAnswerInput();
+            }
+            setGameFeedback('Статистика сброшена', '');
+        }
+
+        gameModeBtn.addEventListener('click', function() {
+            setGameMode(!gameMode);
+        });
+        document.getElementById('gameSkip').addEventListener('click', skipProblem);
+        document.getElementById('gameResetStats').addEventListener('click', resetGameStats);
+        loadGameStats();
+
         function updateDisplay() {
             display.textContent = currentInput;
         }
@@ -519,6 +1080,15 @@
         }
 
         function appendOperator(operator) {
+            if (gameMode) {
+                if (operator === '-' && (currentInput === '0' || shouldResetDisplay)) {
+                    currentInput = '-';
+                    shouldResetDisplay = false;
+                    updateDisplay();
+                }
+                return;
+            }
+
             if (shouldResetDisplay) {
                 shouldResetDisplay = false;
             }
@@ -533,6 +1103,11 @@
         }
 
         function calculate() {
+            if (gameMode) {
+                submitGameAnswer();
+                return;
+            }
+
             const expressionBefore = currentInput;
             try {
                 let expression = expressionBefore.replace(/×/g, '*');
@@ -586,9 +1161,13 @@
             updateDisplay();
         }
 
-        // Поддержка клавиатуры
         document.addEventListener('keydown', function(event) {
             const key = event.key;
+
+            if (gameMode && key === '/') {
+                event.preventDefault();
+                return;
+            }
             
             if (key >= '0' && key <= '9') {
                 appendNumber(key);
